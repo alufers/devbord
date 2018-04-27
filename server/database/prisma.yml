@@ -1,0 +1,14 @@
+endpoint: http://localhost:4466/server/dev
+
+# to disable authentication:
+disableAuth: true
+# secret: mysecret123
+
+# the file path pointing to your data model
+datamodel: datamodel.graphql
+
+# seed your service with initial data based on seed.graphql
+seed:
+  import: seed.graphql
+
+cluster: local

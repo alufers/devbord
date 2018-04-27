@@ -1,0 +1,11 @@
+type Board {
+  id: ID! @unique
+  name: String!
+  areas: [BoardArea!]!  @relation(name: "AreasByBoard" onDelete: CASCADE)
+}
+
+type BoardArea {
+  id: ID! @unique
+  board: Board! @relation(name: "AreasByBoard")
+  name: String! 
+}
