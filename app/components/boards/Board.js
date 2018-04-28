@@ -5,6 +5,18 @@ import ContentAdd from "material-ui/svg-icons/content/add";
 import { Mutation, Query } from "react-apollo";
 import CircularProgress from "material-ui/CircularProgress";
 import BoardArea from "./BoardArea";
+import styled from "styled-components";
+
+const AreaList = styled.div`
+  display: flex;
+  flex-direction: row;
+  min-height: 400px;
+  align-items: flex-start;
+`;
+
+const AddFab = styled(FloatingActionButton)`
+  align-self: center;
+`;
 
 const addBoardAreaMutation = gql`
   mutation addBoardAreaMutation($boardId: ID!) {
@@ -25,29 +37,24 @@ const Board = ({ data }) => {
       <h1>{data.board ? data.board.name : "404"}</h1>
       <style jsx>{`
         .area-list {
-          display: flex;
-          flex-direction: row;
-          min-height: 400px;
-          align-items: flex-start;
         }
         .add-fab {
-          align-self: center;
         }
       `}</style>
-      <div className="area-list">
+      <AreaList>
         {data.board.areas.map(area => <BoardArea area={area} key={area.id} />)}
         <Mutation
           mutation={addBoardAreaMutation}
           variables={{ boardId: data.board.id }}
         >
           {(addBoard, { data, loading }) => (
-            <FloatingActionButton className="add-fab" onClick={addBoard}>
+            <AddFab onClick={addBoard}>
               {loading && <CircularProgress />}
               {!loading && <ContentAdd />}
-            </FloatingActionButton>
+            </AddFab>
           )}
         </Mutation>
-      </div>
+      </AreaList>
     </div>
   );
 };

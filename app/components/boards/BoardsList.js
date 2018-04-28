@@ -1,7 +1,7 @@
 import { List, ListItem } from "material-ui/List";
 import Subheader from "material-ui/Subheader";
 import DahsboardIcon from "material-ui/svg-icons/action/dashboard";
-import { Link } from "../routes";
+import { Link } from "../../routes";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 
