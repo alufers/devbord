@@ -1,6 +1,6 @@
 import App from "../components/App";
 import withData from "../lib/withData";
-import Board from "../components/Board";
+import Board from "../components/boards/Board";
 
 class BoardPage extends React.Component {
   static async getInitialProps({ query }) {

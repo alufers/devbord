@@ -1,10 +1,15 @@
 import App from "../components/App";
 import withData from "../lib/withData";
 import Paper from "material-ui/Paper";
-import BoardsList from "../components/BoardsList";
+import BoardsList from "../components/boards/BoardsList";
 import FloatingActionButton from "material-ui/FloatingActionButton";
 import ContentAdd from "material-ui/svg-icons/content/add";
-import NewBoardModal from "../components/NewBoardModal";
+import NewBoardModal from "../components/boards/NewBoardModal";
+import styled from "styled-components";
+
+const FabContainer = styled.div`
+  padding: 30px;
+`;
 
 class IndexPage extends React.Component {
   state = { newBoardModalOpen: false };
@@ -18,26 +23,19 @@ class IndexPage extends React.Component {
     return (
       <App>
         <Paper>
-          <style jsx>
-            {`
-              .fab-container {
-                padding: 30px;
-              }
-            `}
-          </style>
           <BoardsList />
           <NewBoardModal
             onClose={this.closeNewBoardModal}
             open={this.state.newBoardModalOpen}
           />
-          <div className="fab-container">
+          <FabContainer>
             <FloatingActionButton
               className="fab"
               onClick={this.openNewBoardModal}
             >
               <ContentAdd />
             </FloatingActionButton>
-          </div>
+          </FabContainer>
         </Paper>
       </App>
     );
