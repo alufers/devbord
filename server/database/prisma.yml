@@ -1,5 +1,6 @@
 endpoint: http://localhost:4466/server/dev
-
+service: server
+stage: dev
 # to disable authentication:
 disableAuth: true
 # secret: mysecret123
