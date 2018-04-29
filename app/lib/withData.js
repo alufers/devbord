@@ -48,7 +48,6 @@ export default ComposedComponent => {
         // Prevent Apollo Client GraphQL errors from crashing SSR.
         // Handle them in components via the data.error prop:
         // http://dev.apollodata.com/react/api-queries.html#graphql-query-data-error
-      
       }
 
       if (!process.browser) {

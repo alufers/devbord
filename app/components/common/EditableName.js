@@ -1,10 +1,12 @@
 import React from "react";
 import TextField from "material-ui/TextField";
 import styled from "styled-components";
+import CircularProgress from "material-ui/CircularProgress";
 
 const StaticName = styled.div`
-    
-`
+  margin-top: 14px;
+  font-size: 16px;
+`;
 
 export default class EditableName extends React.Component {
   state = {
@@ -30,15 +32,27 @@ export default class EditableName extends React.Component {
       this.inputRef.focus();
     }, 10);
   };
+
+  handleKeyDown = ev => {
+    if (ev.keyCode === 27) {
+      this.setState({ editMode: false, editValue: this.props.value });
+    }
+    if (ev.keyCode === 13) {
+      this.exitEditMode();
+    }
+  };
+
   render() {
     if (this.state.editMode) {
       return (
         <TextField
+          id={this.props.value + "_editable_name"}
           hintText={this.props.placeholder}
           value={this.state.editValue}
           onChange={this.inputChanged}
           onBlur={this.exitEditMode}
           ref={r => (this.inputRef = r)}
+          onKeyDown={this.handleKeyDown}
         />
       );
     } else {
@@ -48,6 +62,7 @@ export default class EditableName extends React.Component {
           underlineShow={this.state.editMode}
         >
           {this.props.value}
+          {this.props.loading && <CircularProgress />}
         </StaticName>
       );
     }

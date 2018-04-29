@@ -3,7 +3,8 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import AppBar from "material-ui/AppBar";
 import styled from "styled-components";
 import { Link } from "../routes";
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from "material-ui/MenuItem";
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const Container = styled.div`
   width: 70%;
@@ -12,22 +13,22 @@ const Container = styled.div`
 
 export default class App extends React.Component {
   render() {
-    const {children} = this.props;
+    const { children } = this.props;
+    const theme = getMuiTheme({ userAgent: this.props.userAgent });
     return (
-    <MuiThemeProvider>
-      <div>
-        <AppBar 
-            title="DevBord" 
+      <MuiThemeProvider muiTheme={theme}>
+        <div>
+          <AppBar
+            title="DevBord"
             iconElementRight={
-              <Link route='/'>
+              <Link route="/">
                 <MenuItem primaryText="Home" />
               </Link>
-        }
-        >
-        </AppBar>
-        <Container>{children}</Container>
-      </div>
-    </MuiThemeProvider>
+            }
+          />
+          <Container>{children}</Container>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }

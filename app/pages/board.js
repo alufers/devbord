@@ -1,6 +1,7 @@
 import App from "../components/App";
 import withData from "../lib/withData";
 import Board from "../components/boards/Board";
+import withApp from "../lib/withApp";
 
 class BoardPage extends React.Component {
   static async getInitialProps({ query }) {
@@ -9,13 +10,8 @@ class BoardPage extends React.Component {
     };
   }
   render() {
-   
-    return (
-      <App>
-        <Board boardId={this.props.boardId} />
-      </App>
-    );
+    return <Board boardId={this.props.boardId} />;
   }
 }
 
-export default withData(BoardPage);
+export default withData(withApp(BoardPage));

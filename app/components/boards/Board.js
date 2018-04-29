@@ -12,6 +12,8 @@ const AreaList = styled.div`
   flex-direction: row;
   min-height: 400px;
   align-items: flex-start;
+  overflow-x: scroll;
+  padding: 10px;
 `;
 
 const AddFab = styled(FloatingActionButton)`
@@ -24,9 +26,38 @@ const addBoardAreaMutation = gql`
       data: { name: "New area", board: { connect: { id: $boardId } } }
     ) {
       id
+      name
+      board {
+        id
+      }
     }
   }
 `;
+
+const getBoardByIdQuery = gql`
+  query GetBoardById($id: ID!) {
+    board(where: { id: $id }) {
+      id
+      name
+      areas {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const addBoardCacheUpdate = (cache, { data: { createBoardArea } }) => {
+  const { board } = cache.readQuery({
+    query: getBoardByIdQuery,
+    variables: { id: createBoardArea.board.id }
+  });
+  cache.writeQuery({
+    query: getBoardByIdQuery,
+    variables: { id: createBoardArea.board.id },
+    data: { board: { ...board, areas: [...board.areas, createBoardArea] } }
+  });
+};
 
 const Board = ({ data }) => {
   if (data.loading) {
@@ -46,6 +77,7 @@ const Board = ({ data }) => {
         <Mutation
           mutation={addBoardAreaMutation}
           variables={{ boardId: data.board.id }}
+          update={addBoardCacheUpdate}
         >
           {(addBoard, { data, loading }) => (
             <AddFab onClick={addBoard}>
@@ -59,24 +91,10 @@ const Board = ({ data }) => {
   );
 };
 
-export default graphql(
-  gql`
-    query GetBoardById($id: ID!) {
-      board(where: { id: $id }) {
-        id
-        name
-        areas {
-          id
-          name
-        }
-      }
+export default graphql(getBoardByIdQuery, {
+  options: props => ({
+    variables: {
+      id: props.boardId
     }
-  `,
-  {
-    options: props => ({
-      variables: {
-        id: props.boardId
-      }
-    })
-  }
-)(Board);
+  })
+})(Board);
