@@ -13,6 +13,7 @@ type BoardArea {
 
 type Card {
   id: ID! @unique
+  title: String!
   content: String!
   area: BoardArea! @relation(name: "CardsByArea")
 }

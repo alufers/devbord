@@ -6,6 +6,7 @@ import { Mutation, Query } from "react-apollo";
 import CircularProgress from "material-ui/CircularProgress";
 import BoardArea from "./BoardArea";
 import styled from "styled-components";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const AreaList = styled.div`
   display: flex;
@@ -27,6 +28,11 @@ const addBoardAreaMutation = gql`
     ) {
       id
       name
+      cards {
+        id
+        title
+        content
+      }
       board {
         id
       }
@@ -34,7 +40,7 @@ const addBoardAreaMutation = gql`
   }
 `;
 
-const getBoardByIdQuery = gql`
+export const getBoardByIdQuery = gql`
   query getBoardById($id: ID!) {
     board(where: { id: $id }) {
       id
@@ -42,6 +48,11 @@ const getBoardByIdQuery = gql`
       areas {
         id
         name
+        id
+        cards {
+          id
+          title
+        }
       }
     }
   }
@@ -59,37 +70,41 @@ const addBoardAreaCacheUpdate = (cache, { data: { createBoardArea } }) => {
   });
 };
 
-const Board = ({ data }) => {
-  if (data.loading) {
-    return <div>Loading</div>;
+class Board extends React.Component {
+  onDragEnd = ev => {
+    console.log(ev)
+  };
+  render() {
+    let { data } = this.props;
+    if (data.loading) {
+      return <div>Loading</div>;
+    }
+    return (
+      <div>
+        <h1>{data.board ? data.board.name : "404"}</h1>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <AreaList>
+            {data.board.areas.map(area => (
+              <BoardArea area={area} key={area.id} />
+            ))}
+            <Mutation
+              mutation={addBoardAreaMutation}
+              variables={{ boardId: data.board.id }}
+              update={addBoardAreaCacheUpdate}
+            >
+              {(addBoard, { data, loading }) => (
+                <AddFab onClick={addBoard}>
+                  {loading && <CircularProgress />}
+                  {!loading && <ContentAdd />}
+                </AddFab>
+              )}
+            </Mutation>
+          </AreaList>
+        </DragDropContext>
+      </div>
+    );
   }
-  return (
-    <div>
-      <h1>{data.board ? data.board.name : "404"}</h1>
-      <style jsx>{`
-        .area-list {
-        }
-        .add-fab {
-        }
-      `}</style>
-      <AreaList>
-        {data.board.areas.map(area => <BoardArea area={area} key={area.id} />)}
-        <Mutation
-          mutation={addBoardAreaMutation}
-          variables={{ boardId: data.board.id }}
-          update={addBoardAreaCacheUpdate}
-        >
-          {(addBoard, { data, loading }) => (
-            <AddFab onClick={addBoard}>
-              {loading && <CircularProgress />}
-              {!loading && <ContentAdd />}
-            </AddFab>
-          )}
-        </Mutation>
-      </AreaList>
-    </div>
-  );
-};
+}
 
 export default graphql(getBoardByIdQuery, {
   options: props => ({

@@ -4,6 +4,11 @@ import styled from "styled-components";
 import EditableName from "../common/EditableName";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import Card from "./Card";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import ContentAdd from "material-ui/svg-icons/content/add";
+import { getBoardByIdQuery } from "./Board";
+import { Droppable } from "react-beautiful-dnd";
 
 const AreaName = styled.div`
   margin-bottom: 5px;
@@ -25,8 +30,43 @@ const renameBoardAreaMutation = gql`
   }
 `;
 
+const createCardMuatation = gql`
+  mutation createCardInArea($areaId: ID!) {
+    createCard(
+      data: {
+        title: "New card"
+        content: ""
+        area: { connect: { id: $areaId } }
+      }
+    ) {
+      id
+      title
+      content
+      area {
+        id
+        board {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const createCardCacheUpdate = (cache, { data: { createCard } }) => {
+  const { board } = cache.readQuery({
+    query: getBoardByIdQuery,
+    variables: { id: createCard.area.board.id }
+  });
+  board.areas.find(a => a.id === createCard.area.id).cards.push(createCard);
+  cache.writeQuery({
+    query: getBoardByIdQuery,
+    variables: { id: createCard.area.board.id },
+    data: { board }
+  });
+};
+
 export default ({ area }) => (
-  <BoardAreaPaper>
+  <BoardAreaPaper zDepth={2}>
     <AreaName>
       <Mutation mutation={renameBoardAreaMutation}>
         {(rename, { loading }) => (
@@ -42,5 +82,17 @@ export default ({ area }) => (
         )}
       </Mutation>
     </AreaName>
+    {area.cards.map(card => <Card card={card} key={card.id} />)}
+    <Mutation
+      mutation={createCardMuatation}
+      variables={{ areaId: area.id }}
+      update={createCardCacheUpdate}
+    >
+      {createCard => (
+        <FloatingActionButton onClick={createCard}>
+          <ContentAdd />
+        </FloatingActionButton>
+      )}
+    </Mutation>
   </BoardAreaPaper>
 );
