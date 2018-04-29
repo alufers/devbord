@@ -17,7 +17,7 @@ const BoardAreaPaper = styled(Paper)`
 `;
 
 const renameBoardAreaMutation = gql`
-  mutation renameBoardAreaQuery($id: ID!, $newName: String!) {
+  mutation renameBoardArea($id: ID!, $newName: String!) {
     updateBoardArea(where: { id: $id }, data: { name: $newName }) {
       id
       name

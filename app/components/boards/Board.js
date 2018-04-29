@@ -21,7 +21,7 @@ const AddFab = styled(FloatingActionButton)`
 `;
 
 const addBoardAreaMutation = gql`
-  mutation addBoardAreaMutation($boardId: ID!) {
+  mutation addBoardArea($boardId: ID!) {
     createBoardArea(
       data: { name: "New area", board: { connect: { id: $boardId } } }
     ) {
@@ -35,7 +35,7 @@ const addBoardAreaMutation = gql`
 `;
 
 const getBoardByIdQuery = gql`
-  query GetBoardById($id: ID!) {
+  query getBoardById($id: ID!) {
     board(where: { id: $id }) {
       id
       name
@@ -47,7 +47,7 @@ const getBoardByIdQuery = gql`
   }
 `;
 
-const addBoardCacheUpdate = (cache, { data: { createBoardArea } }) => {
+const addBoardAreaCacheUpdate = (cache, { data: { createBoardArea } }) => {
   const { board } = cache.readQuery({
     query: getBoardByIdQuery,
     variables: { id: createBoardArea.board.id }
@@ -77,7 +77,7 @@ const Board = ({ data }) => {
         <Mutation
           mutation={addBoardAreaMutation}
           variables={{ boardId: data.board.id }}
-          update={addBoardCacheUpdate}
+          update={addBoardAreaCacheUpdate}
         >
           {(addBoard, { data, loading }) => (
             <AddFab onClick={addBoard}>

@@ -26,11 +26,13 @@ const BoardsList = ({ data }) => {
   );
 };
 
-export default graphql(gql`
-  query BoardsListQuery {
+export const getBoardsQuery = gql`
+  query getBoards {
     boards {
       id
       name
     }
   }
-`)(BoardsList);
+`;
+
+export default graphql(getBoardsQuery)(BoardsList);
