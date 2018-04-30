@@ -1,6 +1,8 @@
 version: '3'
 services:
   prisma:
+    depends_on:
+      - db
     image: prismagraphql/prisma:1.7
     restart: always
     ports:
