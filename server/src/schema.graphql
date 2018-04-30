@@ -1,9 +1,0 @@
-# import Post from "./generated/prisma.graphql"
-
-type Query {
-  
-}
-
-type Mutation {
- 
-}
