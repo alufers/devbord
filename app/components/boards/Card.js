@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Mutation } from "react-apollo";
 import EditableName from "../common/EditableName";
 import gql from "graphql-tag";
+import { Draggable } from "react-beautiful-dnd";
 
 const CardTitle = styled.div`
   margin-bottom: 15px;
@@ -29,25 +30,38 @@ const changeCardTitleMutation = gql`
 export default class Card extends React.Component {
   render() {
     return (
-      <CardPaper>
-        <CardTitle>
-          <Mutation mutation={changeCardTitleMutation}>
-            {renameCard => (
-              <EditableName
-                value={this.props.card.title}
-                onChange={v =>
-                  renameCard({
-                    variables: {
-                      id: this.props.card.id,
-                      newTitle: v
-                    }
-                  })
-                }
-              />
-            )}
-          </Mutation>
-        </CardTitle>
-      </CardPaper>
+      <Draggable
+        draggableId={"draggable_card_" + this.props.card.id}
+        type="card"
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={r => (console.log(r), provided.innerRef(r))}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <CardPaper>
+              <CardTitle>
+                <Mutation mutation={changeCardTitleMutation}>
+                  {renameCard => (
+                    <EditableName
+                      value={this.props.card.title}
+                      onChange={v =>
+                        renameCard({
+                          variables: {
+                            id: this.props.card.id,
+                            newTitle: v
+                          }
+                        })
+                      }
+                    />
+                  )}
+                </Mutation>
+              </CardTitle>
+            </CardPaper>
+          </div>
+        )}
+      </Draggable>
     );
   }
 }

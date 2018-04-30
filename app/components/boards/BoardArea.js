@@ -66,33 +66,41 @@ const createCardCacheUpdate = (cache, { data: { createCard } }) => {
 };
 
 export default ({ area }) => (
-  <BoardAreaPaper zDepth={2}>
-    <AreaName>
-      <Mutation mutation={renameBoardAreaMutation}>
-        {(rename, { loading }) => (
-          <EditableName
-            value={area.name}
-            loading={loading}
-            onChange={v =>
-              rename({
-                variables: { id: area.id, newName: v || "Unnamed area" }
-              })
-            }
-          />
-        )}
-      </Mutation>
-    </AreaName>
-    {area.cards.map(card => <Card card={card} key={card.id} />)}
-    <Mutation
-      mutation={createCardMuatation}
-      variables={{ areaId: area.id }}
-      update={createCardCacheUpdate}
-    >
-      {createCard => (
-        <FloatingActionButton onClick={createCard}>
-          <ContentAdd />
-        </FloatingActionButton>
-      )}
-    </Mutation>
-  </BoardAreaPaper>
+  <Droppable droppableId={"board_area_droppable_" + area.id} type="card">
+    {(provided, snapshot) => (
+      <div ref={provided.innerRef} {...provided.droppableProps}>
+        {" "}
+        <BoardAreaPaper zDepth={2}>
+          <AreaName>
+            <Mutation mutation={renameBoardAreaMutation}>
+              {(rename, { loading }) => (
+                <EditableName
+                  value={area.name}
+                  loading={loading}
+                  onChange={v =>
+                    rename({
+                      variables: { id: area.id, newName: v || "Unnamed area" }
+                    })
+                  }
+                />
+              )}
+            </Mutation>
+          </AreaName>
+          {area.cards.map(card => <Card card={card} key={card.id} />)}
+          {provided.placeholder}
+          <Mutation
+            mutation={createCardMuatation}
+            variables={{ areaId: area.id }}
+            update={createCardCacheUpdate}
+          >
+            {createCard => (
+              <FloatingActionButton onClick={createCard}>
+                <ContentAdd />
+              </FloatingActionButton>
+            )}
+          </Mutation>
+        </BoardAreaPaper>
+      </div>
+    )}
+  </Droppable>
 );
