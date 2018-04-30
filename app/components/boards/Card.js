@@ -14,7 +14,7 @@ const CardTitle = styled.div`
 
 const CardPaper = styled(Paper)`
   padding: 15px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   cursor: move;
 `;
 
@@ -33,12 +33,18 @@ export default class Card extends React.Component {
       <Draggable
         draggableId={this.props.card.id}
         type="card"
+        index={this.props.card.index}
       >
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            style={{
+              paddingBottom: "15px",
+              ...provided.draggableProps.style,
+              ...provided.dragHandleProps.style
+            }}
           >
             <CardPaper>
               <CardTitle>
@@ -58,6 +64,7 @@ export default class Card extends React.Component {
                   )}
                 </Mutation>
               </CardTitle>
+              <code>{this.props.card.index}</code>
             </CardPaper>
           </div>
         )}
