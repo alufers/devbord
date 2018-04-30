@@ -49,7 +49,7 @@ export const getBoardByIdQuery = gql`
         id
         name
         id
-        cards {
+        cards: cards(orderBy: index_ASC) {
           id
           title
           index
@@ -74,8 +74,43 @@ const addBoardAreaCacheUpdate = (cache, { data: { createBoardArea } }) => {
 
 class Board extends React.Component {
   onDragEnd = ev => {
-    console.log(ev);
-    
+    if (!ev.destination) return;
+
+    let card = this.props.apolloClient.cache.readFragment({
+      id: "Card:" + ev.draggableId,
+      fragment: gql`
+        fragment DraggedCard on Card {
+          id
+          title
+          content
+          index
+        }
+      `
+    });
+
+    let { board } = this.props.apolloClient.readQuery({
+      query: getBoardByIdQuery,
+      variables: { id: this.props.data.board.id }
+    });
+
+    let destinationIndex = ev.destination.index;
+    if (destinationIndex < 0) {
+      destinationIndex = 0;
+    }
+
+    if (ev.destination.droppableId === ev.source.droppableId) {
+      let area = board.areas.find(a => a.id === ev.destination.droppableId);
+      console.log("From", card.index, "to", destinationIndex, { ev });
+
+      area.cards.find(c => c.index === destinationIndex).index = card.index;
+      area.cards.find(c => c.id === card.id).index = destinationIndex;
+      area.cards.sort((a, b) => a.index - b.index);
+      this.props.apolloClient.writeQuery({
+        query: getBoardByIdQuery,
+        variables: { id: this.props.data.board.id },
+        data: { board }
+      });
+    }
   };
   render() {
     let { data } = this.props;
