@@ -52,6 +52,8 @@ export const getBoardByIdQuery = gql`
         cards {
           id
           title
+          index
+          content
         }
       }
     }
@@ -72,12 +74,19 @@ const addBoardAreaCacheUpdate = (cache, { data: { createBoardArea } }) => {
 
 class Board extends React.Component {
   onDragEnd = ev => {
-    console.log(ev)
+    console.log(ev);
+    
   };
   render() {
     let { data } = this.props;
     if (data.loading) {
       return <div>Loading</div>;
+    }
+    if (data.error) {
+      return <div>{data.error}</div>;
+    }
+    if (!data.board) {
+      return <div>404</div>;
     }
     return (
       <div>

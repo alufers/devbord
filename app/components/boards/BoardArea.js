@@ -31,17 +31,19 @@ const renameBoardAreaMutation = gql`
 `;
 
 const createCardMuatation = gql`
-  mutation createCardInArea($areaId: ID!) {
+  mutation createCardInArea($areaId: ID!, $cardIndex: Int!) {
     createCard(
       data: {
         title: "New card"
         content: ""
         area: { connect: { id: $areaId } }
+        index: $cardIndex
       }
     ) {
       id
       title
       content
+      index
       area {
         id
         board {
@@ -66,10 +68,9 @@ const createCardCacheUpdate = (cache, { data: { createCard } }) => {
 };
 
 export default ({ area }) => (
-  <Droppable droppableId={"board_area_droppable_" + area.id} type="card">
+  <Droppable droppableId={area.id} type="card">
     {(provided, snapshot) => (
       <div ref={provided.innerRef} {...provided.droppableProps}>
-        {" "}
         <BoardAreaPaper zDepth={2}>
           <AreaName>
             <Mutation mutation={renameBoardAreaMutation}>
@@ -90,7 +91,7 @@ export default ({ area }) => (
           {provided.placeholder}
           <Mutation
             mutation={createCardMuatation}
-            variables={{ areaId: area.id }}
+            variables={{ areaId: area.id, cardIndex: area.cards.length }}
             update={createCardCacheUpdate}
           >
             {createCard => (

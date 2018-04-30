@@ -31,12 +31,12 @@ export default class Card extends React.Component {
   render() {
     return (
       <Draggable
-        draggableId={"draggable_card_" + this.props.card.id}
+        draggableId={this.props.card.id}
         type="card"
       >
         {(provided, snapshot) => (
           <div
-            ref={r => (console.log(r), provided.innerRef(r))}
+            ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >

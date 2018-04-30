@@ -16,4 +16,5 @@ type Card {
   title: String!
   content: String!
   area: BoardArea! @relation(name: "CardsByArea")
+  index: Int!
 }
