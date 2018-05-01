@@ -1,5 +1,7 @@
 <template>
-  <v-btn>Elomelo</v-btn>
+  <section>
+    <v-btn>Elomelo</v-btn>
+  </section>
 </template>
 
 <script>
