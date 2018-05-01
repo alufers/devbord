@@ -13,7 +13,15 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/apollo": "^3.0.6",
+    "apollo-cache-inmemory": "^1.1.12",
+    "apollo-client": "^2.2.8",
+    "apollo-link": "^1.2.2",
+    "apollo-link-http": "^1.5.4",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.1",
     "nuxt": "^1.0.0",
+    "vue-apollo": "^3.0.0-beta.5",
     "vuetify": "^1.0.17"
   },
   "devDependencies": {
