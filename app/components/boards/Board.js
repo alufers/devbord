@@ -7,6 +7,7 @@ import CircularProgress from "material-ui/CircularProgress";
 import BoardArea from "./BoardArea";
 import styled from "styled-components";
 import { DragDropContext } from "react-beautiful-dnd";
+import arrayMove from "array-move";
 
 const AreaList = styled.div`
   display: flex;
@@ -100,9 +101,8 @@ class Board extends React.Component {
 
     if (ev.destination.droppableId === ev.source.droppableId) {
       let area = board.areas.find(a => a.id === ev.destination.droppableId);
-      console.log("From", card.index, "to", destinationIndex, { ev });
 
-      area.cards.find(c => c.index === destinationIndex).index = card.index;
+     
       area.cards.find(c => c.id === card.id).index = destinationIndex;
       area.cards.sort((a, b) => a.index - b.index);
       this.props.apolloClient.writeQuery({
@@ -110,6 +110,10 @@ class Board extends React.Component {
         variables: { id: this.props.data.board.id },
         data: { board }
       });
+    } else {
+      let destinationArea = board.areas.find(a => a.id === ev.destination.droppableId);
+      let sourceArea = board.areas.find(a => a.id === ev.source.droppableId);
+      //sourceArea.filter
     }
   };
   render() {
