@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <BoardsList />
+    <boardsList />
   </v-card>
 </template>
 
