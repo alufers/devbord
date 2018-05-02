@@ -1,10 +1,10 @@
 <template>
   <v-app>
 
-    <v-toolbar app>
+    <v-toolbar app clipped-left>
       <v-toolbar-title>DevBord</v-toolbar-title>
     </v-toolbar>
-    <v-navigation-drawer app clipped></v-navigation-drawer>
+    <SideNavigationMenu />
     <v-content>
 
       <v-container>
@@ -13,7 +13,14 @@
     </v-content>
   </v-app>
 </template>
-
+<script>
+import SideNavigationMenu from "../components/SideNavigationMenu";
+export default {
+  components: {
+    SideNavigationMenu
+  }
+};
+</script>
 <style>
 
 </style>
