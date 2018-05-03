@@ -1,14 +1,14 @@
 <template>
   <v-card>
-    <BoardsList />
+    <boardList />
   </v-card>
 </template>
 
 <script>
-import BoardsList from "../components/BoardsList";
+import BoardList from "../components/BoardList";
 
 export default {
-  components: { BoardsList }
+  components: { BoardList }
 };
 </script>
 

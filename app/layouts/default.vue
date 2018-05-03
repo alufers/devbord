@@ -4,7 +4,7 @@
     <v-toolbar app clipped-left>
       <v-toolbar-title>DevBord</v-toolbar-title>
     </v-toolbar>
-    <SideNavigationMenu />
+    <sideNavigationMenu />
     <v-content>
 
       <v-container>

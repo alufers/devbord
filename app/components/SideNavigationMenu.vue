@@ -1,14 +1,14 @@
 <template>
     <v-navigation-drawer app clipped permanent>
-        <BoardsList />
+        <BoardList />
     </v-navigation-drawer>
 </template>
 
 <script>
-import BoardsList from "./BoardsList";
+import BoardList from "./BoardList";
 export default {
   components: {
-    BoardsList
+    BoardList
   }
 };
 </script>
