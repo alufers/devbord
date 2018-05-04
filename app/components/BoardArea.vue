@@ -10,8 +10,27 @@
     <div>
       <draggable v-model="draggableCards" :options="{group: 'cards'}" class="drag-area">
         <v-card v-for="card in area.cards" :key="card.id" class="ma-2 pa-3 elevation-3 card" raised>
+          <v-layout>
+            <v-spacer />
+
+            <v-menu offset-y>
+              <v-btn icon class="ma-0" slot="activator">
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+              <v-list>
+                <v-list-tile>
+                  <v-list-tile-title>More</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile @click="deleteCard(card.id)">
+                  <v-list-tile-title>Delete card</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
+          </v-layout>
           <div class="subheading">
-            <EditableName :value="card.title" @input="renameCard(card.id, $event)" />
+            <v-flex>
+              <EditableName :value="card.title" @input="renameCard(card.id, $event)" />
+            </v-flex>
           </div>
         </v-card>
       </draggable>
@@ -44,6 +63,34 @@ export default {
     }
   },
   methods: {
+    async deleteCard(cardId) {
+      await this.$apollo.mutate({
+        mutation: gql`
+          mutation deleteCard($cardId: ID!) {
+            deleteCard(where: { id: $cardId }) {
+              id
+            }
+          }
+        `,
+        variables: {
+          cardId
+        },
+        update: (cache, { data }) => {
+          let { board } = cache.readQuery({
+            query: getBoardByIdQuery,
+            variables: { id: this.board.id }
+          });
+
+          let area = board.areas.find(a => a.id === this.area.id);
+          area.cards = area.cards.filter(c => c.id !== cardId);
+          cache.writeQuery({
+            query: getBoardByIdQuery,
+            variables: { id: this.board.id },
+            data: { board }
+          });
+        }
+      });
+    },
     async renameBoardArea(areaId, newName) {
       await this.$apollo.mutate({
         mutation: gql`
