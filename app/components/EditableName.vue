@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <v-text-field ref="inp" :value="internalValue" @input="internalValue = $event" @blur="emitValue" @keyup.enter="$refs.inp.blur()" @keyup.esc="discardValue"></v-text-field>
-    </div>
+  <div>
+    <v-text-field ref="inp" :value="internalValue" @input="internalValue = $event" @blur="emitValue" @keyup.enter="$refs.inp.blur()" @keyup.esc="discardValue" />
+  </div>
 </template>
 
 <script>
