@@ -1,23 +1,25 @@
 <template>
-    <v-card class="mr-3 area elevation-1">
-        <v-card-title primary-title>
-            <div>
-                <h3 class="title mb-0">
-                    <EditableName :value="area.name" @input="renameBoardArea(area.id, $event)" />
-                </h3>
-            </div>
-        </v-card-title>
-        <div>
-            <draggable v-model="draggableCards" :options="{group: 'cards'}" @end="reindexCards" class="drag-area">
-                <v-card v-for="card in area.cards" :key="card.id" class="ma-2 pa-3 elevation-3 card" raised>
-                    <div class="subheading">{{card.title}}</div>
-                </v-card>
-            </draggable>
-            <v-btn color="primary" class="ma-2 add-button" @click="addCard(area)">
-                <v-icon>add</v-icon>
-            </v-btn>
-        </div>
-    </v-card>
+  <v-card class="mr-3 area elevation-1">
+    <v-card-title primary-title>
+      <div>
+        <h3 class="title mb-0">
+          <EditableName :value="area.name" @input="renameBoardArea(area.id, $event)" />
+        </h3>
+      </div>
+    </v-card-title>
+    <div>
+      <draggable v-model="draggableCards" :options="{group: 'cards'}" class="drag-area">
+        <v-card v-for="card in area.cards" :key="card.id" class="ma-2 pa-3 elevation-3 card" raised>
+          <div class="subheading">
+            <EditableName :value="card.title" @input="renameCard(card.id, $event)" />
+          </div>
+        </v-card>
+      </draggable>
+      <v-btn color="primary" class="ma-2 add-button" @click="addCard(area)">
+        <v-icon>add</v-icon>
+      </v-btn>
+    </div>
+  </v-card>
 </template>
 
 <script>
@@ -58,9 +60,24 @@ export default {
         }
       });
     },
-    reindexCards() {},
-    addCard(area) {
-      this.$apollo.mutate({
+    async renameCard(cardId, newTitle) {
+      await this.$apollo.mutate({
+        mutation: gql`
+          mutation renameCard($cardId: ID!, $newTitle: String!) {
+            updateCard(where: { id: $cardId }, data: { title: $newTitle }) {
+              id
+              title
+            }
+          }
+        `,
+        variables: {
+          cardId,
+          newTitle
+        }
+      });
+    },
+    async addCard(area) {
+      await this.$apollo.mutate({
         mutation: gql`
           mutation addCard($areaId: ID!, $index: Int!) {
             createCard(
@@ -82,10 +99,24 @@ export default {
           }
         `,
         variables: {
-            areaId: area.id,
-            index: area.cards.length
+          areaId: area.id,
+          index: area.cards.length
         },
-        //update: (cache, {}) => {}
+        update: (cache, { data }) => {
+          let { board } = cache.readQuery({
+            query: getBoardByIdQuery,
+            variables: { id: this.board.id }
+          });
+
+          board.areas
+            .find(a => a.id === this.area.id)
+            .cards.push(data.createCard);
+          cache.writeQuery({
+            query: getBoardByIdQuery,
+            variables: { id: this.board.id },
+            data: { board }
+          });
+        }
       });
     }
   },
