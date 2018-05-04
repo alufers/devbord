@@ -101,6 +101,7 @@ export default {
   apollo: {
     board: {
       query: getBoardByIdQuery,
+      prefetch: ({ params }) => ({ id: params.id }),
       variables() {
         return { id: this.id };
       }
