@@ -15,9 +15,10 @@
 
 <script>
 import gql from "graphql-tag";
-import getBoardsQuery from "../lib/getBoardsQuery"
+import getBoardsQuery from "../lib/getBoardsQuery";
+import { willPrefetch } from "vue-apollo";
 
-export default {
+export default willPrefetch({
   data() {
     return {
       boards: []
@@ -25,9 +26,12 @@ export default {
   },
   components: {},
   apollo: {
-    boards: getBoardsQuery
+    boards: {
+      query: getBoardsQuery,
+      prefetch: true
+    }
   }
-};
+});
 </script>
 
 <style>
