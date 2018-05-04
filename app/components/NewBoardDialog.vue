@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn fab color="primary" class="ma-3" @click="isOpen = true">
+        <v-btn fab color="primary" class="ma-3" @click="openDialog">
             <v-icon>add</v-icon>
         </v-btn>
 
@@ -15,7 +15,7 @@
                 <v-card-actions>
                     <v-spacer />
                     <v-btn color="primary" flat @click="isOpen = false">Cancel</v-btn>
-                    <v-btn color="primary" dark @click="createBoard">Create board</v-btn>
+                    <v-btn color="primary" @click="createBoard" :disabled="name.trim() === ''">Create board</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -28,6 +28,10 @@ import getBoardsQuery from "../lib/getBoardsQuery";
 
 export default {
   methods: {
+    openDialog() {
+      this.isOpen = true;
+      this.name = "";
+    },
     async createBoard() {
       if (this.name.trim() === "") {
         return;
