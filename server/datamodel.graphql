@@ -6,7 +6,7 @@ type Board {
 
 type BoardArea {
   id: ID! @unique
-  board: Board! @relation(name: "AreasByBoard")
+  board: Board! @relation(name: "AreasByBoard", onDelete: CASCADE)
   name: String!
   cards: [Card!]! @relation(name: "CardsByArea", onDelete: CASCADE)
 }
@@ -15,6 +15,6 @@ type Card {
   id: ID! @unique
   title: String!
   content: String!
-  area: BoardArea! @relation(name: "CardsByArea")
+  area: BoardArea! @relation(name: "CardsByArea", onDelete: CASCADE)
   index: Int!
 }
