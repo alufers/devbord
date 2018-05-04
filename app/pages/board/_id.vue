@@ -8,6 +8,13 @@
     </h1>
     <div class="board-areas">
       <BoardArea v-for="area in board.areas" :key="area.id" :area="area" :board="board" />
+      <v-card class="new-area-placeholder">
+        <v-btn flat class="new-area-button" block @click="addArea">
+          <v-icon>
+            add
+          </v-icon>
+        </v-btn>
+      </v-card>
     </div>
   </div>
 </template>
@@ -47,6 +54,48 @@ export default {
           newName
         }
       });
+    },
+    async addArea() {
+      await this.$apollo.mutate({
+        mutation: gql`
+          mutation addBoardArea($boardId: ID!) {
+            createBoardArea(
+              data: { name: "New area", board: { connect: { id: $boardId } } }
+            ) {
+              id
+              name
+              cards: cards(orderBy: index_ASC) {
+                area {
+                  id
+                }
+                id
+                title
+                index
+                content
+              }
+            }
+          }
+        `,
+        variables: {
+          boardId: this.id
+        },
+        update: (cache, { data }) => {
+          let { board } = cache.readQuery({
+            query: getBoardByIdQuery,
+            variables: {
+              id: this.id
+            }
+          });
+          board.areas.push(data.createBoardArea);
+          cache.writeQuery({
+            query: getBoardByIdQuery,
+            variables: {
+              id: this.id
+            },
+            data: { board }
+          });
+        }
+      });
     }
   },
   apollo: {
@@ -64,5 +113,16 @@ export default {
 .board-areas {
   display: flex;
   flex-direction: row;
+}
+.new-area-placeholder {
+  min-width: 300px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: stretch;
+}
+.new-area-button {
+  height: 100%;
 }
 </style>
