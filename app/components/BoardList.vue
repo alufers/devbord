@@ -15,6 +15,7 @@
 
 <script>
 import gql from "graphql-tag";
+import getBoardsQuery from "../lib/getBoardsQuery"
 
 export default {
   data() {
@@ -24,14 +25,7 @@ export default {
   },
   components: {},
   apollo: {
-    boards: gql`
-      query getBoards {
-        boards {
-          id
-          name
-        }
-      }
-    `
+    boards: getBoardsQuery
   }
 };
 </script>
