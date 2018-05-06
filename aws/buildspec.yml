@@ -12,4 +12,4 @@ phases:
     commands:
       - ls server
       - ls server/node_modules
-      - cd server && ENDPOINT=http://$PRISMA_SERVER:4460 ./node_modules/.bin/prisma deploy
+      - cd server && ENDPOINT=http://$PRISMA_SERVER:4460 ../node_modules/.bin/prisma deploy
