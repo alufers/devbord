@@ -1,0 +1,6 @@
+mutation createBoard($name: String!) {
+  createBoard(data: { name: $name }) {
+    id
+    name
+  }
+}
