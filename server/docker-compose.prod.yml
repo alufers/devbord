@@ -1,8 +1,6 @@
 version: '3'
 services:
   prisma:
-    depends_on:
-      - db
     image: prismagraphql/prisma:1.7
     restart: always
     ports:
@@ -17,9 +15,4 @@ services:
             host: db
             port: 3306
             user: prisma
-            password: to_haslo_nie_moze_zawierac_zabronionych_slow_przez_nastoletni_pe_el
-  db:
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: to_haslo_nie_moze_zawierac_zabronionych_slow_przez_nastoletni_pe_el
+            password: haslo_produkcyjne
