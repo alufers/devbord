@@ -20,8 +20,3 @@ git clone https://github.com/alufers/devbord.git
 cd devbord
 cd server
 docker-compose up -d
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-command -v nvm
-npm i -g prisma
-sleep 20
-prisma deploy
