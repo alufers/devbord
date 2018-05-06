@@ -32,3 +32,80 @@ Resources:
         FromPort: '22'
         ToPort: '22'
         CidrIp: 0.0.0.0/0
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: ['sts:AssumeRole']
+          Effect: Allow
+          Principal:
+            Service: [codebuild.amazonaws.com]
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CodeBuildAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                - 'logs:*'
+                - 'ec2:CreateNetworkInterface'
+                - 'ec2:DescribeNetworkInterfaces'
+                - 'ec2:DeleteNetworkInterface'
+                - 'ec2:DescribeSubnets'
+                - 'ec2:DescribeSecurityGroups'
+                - 'ec2:DescribeDhcpOptions'
+                - 'ec2:DescribeVpcs'
+                - 'ec2:CreateNetworkInterfacePermission'
+                Effect: Allow
+                Resource: '*'
+
+  Project:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: DevbordCodebuild
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Source:
+        Type: GITHUB
+        Location: https://github.com/alufers/devbord
+        GitCloneDepth: 1
+        BuildSpec: aws/buildspec.yml
+        Auth:
+          Type: OAUTH
+        InsecureSsl: false
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Cache:
+        Type: NO_CACHE
+      Environment:
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/nodejs:8.11.0
+        ComputeType: BUILD_GENERAL1_SMALL
+        EnvironmentVariables:
+        - Name: PRISMA_SERVER
+          Value: !GetAtt PrismaServer.PublicDnsName
+          Type: PLAINTEXT
+        PrivilegedMode: false
+      TimeoutInMinutes: 60
+      # Name: devbordBuild
+      # Description: Currently deploys schema to prisma
+      # ServiceRole: !GetAtt ServiceRole.Arn
+      # Artifacts:
+      #   Type: no_artifacts
+      # Environment:
+      #   Type: LINUX_CONTAINER
+      #   ComputeType: BUILD_GENERAL1_SMALL
+      #   Image: aws/codebuild/java:openjdk-8
+      #   EnvironmentVariables:
+      #   - Name: varName
+      #     Value: varValue
+      # Source:
+      #   Location: codebuild-demo-test/0123ab9a371ebf0187b0fe5614fbb72c
+      #   Type: S3
+      # TimeoutInMinutes: 10
+      # Tags:
+      #   - Key: Key1
+      #     Value: Value1
+      #   - Key: Key2
+      #     Value: Value2
