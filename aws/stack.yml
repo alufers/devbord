@@ -18,7 +18,7 @@ Resources:
         - !Ref PrismaServerSG
       UserData: !Base64 |
         #!/bin/bash
-        curl https://raw.githubusercontent.com/alufers/devbord/master/aws/prisma_install.sh | bash >>userdata.log 2>&1
+        curl https://raw.githubusercontent.com/alufers/devbord/master/aws/prisma_install.sh | bash >>/var/log/userdata.log 2>&1
   PrismaServerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
