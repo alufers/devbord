@@ -16,7 +16,7 @@ services:
             active: true
             host: db
             port: 3306
-            user: prisma
+            user: root
             password: to_haslo_nie_moze_zawierac_zabronionych_slow_przez_nastoletni_pe_el
   db:
     image: mysql:5.7
