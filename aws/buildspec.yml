@@ -3,11 +3,11 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm i -g prisma
+      - npm i prisma
   pre_build:
     commands:
   build:
     commands:
   post_build:
     commands:
-      - cd server && ENDPOINT=http://$PRISMA_SERVER:4460 prisma deploy
+      - cd server && ENDPOINT=http://$PRISMA_SERVER:4460 ./node_modules/.bin/prisma deploy
