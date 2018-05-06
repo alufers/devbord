@@ -10,4 +10,5 @@ phases:
     commands:
   post_build:
     commands:
+      - ENDPOINT=http://$PRISMA_SERVER:4460 node -p process.env
       - cd server && ENDPOINT=http://$PRISMA_SERVER:4460 ../node_modules/.bin/prisma deploy
