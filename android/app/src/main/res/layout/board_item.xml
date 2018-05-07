@@ -20,17 +20,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="WordLing" /> <!-- Every tools: attribute is ignored by compiler. -->
-
-        <TextView
-            android:id="@+id/repositoryDescriptionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repositoryTitleTextView"
-            tools:text="sample text" /> <!-- Every tools: attribute is ignored by compiler. -->
+            tools:text="Devbord board" /> <!-- Every tools: attribute is ignored by compiler. -->
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

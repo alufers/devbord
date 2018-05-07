@@ -7,14 +7,8 @@ query getBoardById($id: ID!) {
       name
       id
       cards: cards(orderBy: index_ASC) {
-        area {
-          id
-        }
-        id
-        title
-        index
-        content
+        ...CardFragment
       }
-    }
+  }
   }
 }

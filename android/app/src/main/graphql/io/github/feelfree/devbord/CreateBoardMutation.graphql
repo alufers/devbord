@@ -4,3 +4,8 @@ mutation createBoard($name: String!) {
     name
   }
 }
+
+fragment BoardFragment on Board {
+  id,
+  name
+}

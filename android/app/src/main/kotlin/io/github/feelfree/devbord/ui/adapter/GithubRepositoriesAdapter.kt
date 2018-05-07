@@ -25,6 +25,6 @@ class GithubRepositoriesAdapter @Inject constructor() : RecyclerView.Adapter<Git
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GithubRepositoryViewHolder =
-            GithubRepositoryViewHolder(parent.inflate(R.layout.github_repository_list_item))
+            GithubRepositoryViewHolder(parent.inflate(R.layout.board_item))
     override fun getItemCount(): Int = repositories.size
 }

@@ -1,12 +1,13 @@
 package io.github.feelfree.devbord.di.modules
 
+import com.apollographql.apollo.ApolloClient
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
+import io.github.feelfree.devbord.api.repository.boards.BoardsApi
+import io.github.feelfree.devbord.api.repository.boards.BoardsRepository
 
 @Module
 class RepositoryModule {
-    // Remember to provide repository with interface
-    //@Provides
-    //fun provideUsersApi(retrofit: Retrofit) : UsersApi = UsersRepository(retrofit)
+    @Provides
+    fun provideBoardsApi(apolloClient: ApolloClient) : BoardsApi = BoardsRepository(apolloClient)
 }

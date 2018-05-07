@@ -7,12 +7,16 @@ mutation addCard($areaId: ID!, $index: Int!, $content: String!, $title: String!)
       area: { connect: { id: $areaId } }
     }
   ) {
+    ...CardFragment
+  }
+}
+
+fragment CardFragment on Card {
+  id
+  title
+  content
+  index
+  area {
     id
-    title
-    content
-    index
-    area {
-      id
-    }
   }
 }
